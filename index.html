@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Júpiter Kleidung - Loja de Moda Masculina</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --azul-petroleo: #0b5b6e;
+            --azul-escuro: #084854;
+            --branco: #ffffff;
+            --cinza-claro: #f5f5f5;
+            --cinza-medio: #e0e0e0;
+            --ouro: #d4af37;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--branco);
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--azul-petroleo) 0%, var(--azul-escuro) 100%);
+            color: var(--branco);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .links-sociais {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-social {
+            background: var(--ouro);
+            color: var(--azul-petroleo);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid var(--ouro);
+        }
+
+        .btn-social:hover {
+            background: transparent;
+            color: var(--ouro);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .filtro-btn {
+            background: var(--cinza-claro);
+            color: var(--azul-petroleo);
+            border: 2px solid var(--azul-petroleo);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .filtro-btn.ativo {
+            background: var(--ouro);
+            border-color: var(--ouro);
+        }
+
+        .filtro-btn:hover {
+            border-color: var(--ouro);
+        }
+
+        .grid-produtos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .produto-card {
+            background: var(--branco);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .produto-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: var(--ouro);
+        }
+
+        .galeria-imagens {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: var(--cinza-claro);
+            overflow: hidden;
+        }
+
+        .galeria-imagens img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .galeria-imagens img.ativa {
+            display: block;
+        }
+
+        .controles-galeria {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .ponto {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ponto.ativo {
+            background: var(--ouro);
+            width: 20px;
+            border-radius: 5px;
+        }
+
+        .setas {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .seta {
+            background: rgba(0,0,0,0.5);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: all;
+            font-size: 1.3em;
+            transition: all 0.3s;
+        }
+
+        .seta:hover {
+            background: var(--ouro);
+            color: var(--azul-petroleo);
+        }
+
+        .info-produto {
+            padding: 20px;
+        }
+
+        .categoria-badge {
+            display: inline-block;
+            background: var(--ouro);
+            color: var(--azul-petroleo);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .nome-produto {
+            font-size: 1.3em;
+            color: var(--azul-petroleo);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .descricao-produto {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .preco {
+            font-size: 1.8em;
+            color: var(--ouro);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .botoes-compra {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .btn-comprar {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+
+        .btn-shopee {
+            background: #ee4d2d;
+            color: white;
+        }
+
+        .btn-shopee:hover {
+            background: #d63820;
+            transform: scale(1.05);
+        }
+
+        .btn-shein {
+            background: #000;
+            color: white;
+        }
+
+        .btn-shein:hover {
+            background: #333;
+            transform: scale(1.05);
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .vazio h2 {
+            color: var(--azul-petroleo);
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--azul-petroleo) 0%, var(--azul-escuro) 100%);
+            color: var(--branco);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+        }
+
+        .admin-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--ouro);
+            color: var(--azul-petroleo);
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .admin-badge:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .grid-produtos {
+                grid-template-columns: 1fr;
+            }
+
+            .filtros {
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>👔 JÚPITER KLEIDUNG</h1>
+        <p>Loja de Moda Masculina Premium</p>
+        <div class="links-sociais" id="linksContainer"></div>
+    </header>
+
+    <div class="container">
+        <div class="filtros" id="filtrosContainer"></div>
+        <div class="grid-produtos" id="produtosContainer"></div>
+        <div id="mensagemVazia"></div>
+    </div>
+
+    <footer>
+        <p>© 2026 Júpiter Kleidung. Todos os direitos reservados.</p>
+    </footer>
+
+    <a href="admin.html" class="admin-badge">⚙️ CEO</a>
+
+    <script>
+        let todosProdutos = [];
+        let categoriaSelecionada = 'todas';
+
+        async function carregarDados() {
+            try {
+                const response = await fetch('dados.json');
+                const dados = await response.json();
+                todosProdutos = dados.produtos || [];
+                
+                renderizarLinks(dados.links);
+                renderizarFiltros();
+                renderizarProdutos();
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        function renderizarLinks(links) {
+            const html = links.map(link => `
+                <a href="${link.url}" target="_blank" class="btn-social">${link.nome}</a>
+            `).join('');
+            document.getElementById('linksContainer').innerHTML = html;
+        }
+
+        function renderizarFiltros() {
+            const categorias = ['todas', ...new Set(todosProdutos.map(p => p.categoria))];
+            const html = categorias.map(cat => `
+                <button class="filtro-btn ${cat === 'todas' ? 'ativo' : ''}" onclick="filtrarPor('${cat}')">
+                    ${cat === 'todas' ? '🏪 Todos' : cat}
+                </button>
+            `).join('');
+            document.getElementById('filtrosContainer').innerHTML = html;
+        }
+
+        function filtrarPor(categoria) {
+            categoriaSelecionada = categoria;
+            document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('ativo'));
+            event.target.classList.add('ativo');
+            renderizarProdutos();
+        }
+
+        function renderizarProdutos() {
+            let produtos = todosProdutos;
+            if (categoriaSelecionada !== 'todas') {
+                produtos = produtos.filter(p => p.categoria === categoriaSelecionada);
+            }
+
+            if (produtos.length === 0) {
+                document.getElementById('produtosContainer').innerHTML = '';
+                document.getElementById('mensagemVazia').innerHTML = `
+                    <div class="vazio">
+                        <h2>Nenhum produto encontrado</h2>
+                        <p>Volte mais tarde para conferir nossas novidades! 👔</p>
+                    </div>
+                `;
+                return;
+            }
+
+            document.getElementById('mensagemVazia').innerHTML = '';
+            const html = produtos.map((p, idx) => `
+                <div class="produto-card">
+                    <div class="galeria-imagens" id="galeria-${idx}">
+                        ${p.imagens.map((img, i) => `
+                            <img src="${img}" alt="${p.nome}" class="${i === 0 ? 'ativa' : ''}">
+                        `).join('')}
+                        ${p.imagens.length > 1 ? `
+                            <div class="setas">
+                                <div class="seta" onclick="mudarImagem(${idx}, -1)">❮</div>
+                                <div class="seta" onclick="mudarImagem(${idx}, 1)">❯</div>
+                            </div>
+                            <div class="controles-galeria">
+                                ${p.imagens.map((_, i) => `
+                                    <div class="ponto ${i === 0 ? 'ativo' : ''}" onclick="irParaImagem(${idx}, ${i})"></div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="info-produto">
+                        <span class="categoria-badge">${p.categoria}</span>
+                        <h3 class="nome-produto">${p.nome}</h3>
+                        <p class="descricao-produto">${p.descricao}</p>
+                        <div class="preco">R$ ${parseFloat(p.preco).toFixed(2)}</div>
+                        <div class="botoes-compra">
+                            ${p.linkShopee ? `<a href="${p.linkShopee}" target="_blank" class="btn-comprar btn-shopee">🛍️ Comprar no Shopee</a>` : ''}
+                            ${p.linkShein ? `<a href="${p.linkShein}" target="_blank" class="btn-comprar btn-shein">👗 Comprar no Shein</a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('produtosContainer').innerHTML = html;
+        }
+
+        function mudarImagem(idx, direcao) {
+            const galeria = document.getElementById(`galeria-${idx}`);
+            const imagens = galeria.querySelectorAll('img');
+            const ativa = galeria.querySelector('img.ativa');
+            let novoIdx = Array.from(imagens).indexOf(ativa) + direcao;
+            if (novoIdx >= imagens.length) novoIdx = 0;
+            if (novoIdx < 0) novoIdx = imagens.length - 1;
+            irParaImagem(idx, novoIdx);
+        }
+
+        function irParaImagem(idx, novoIdx) {
+            const galeria = document.getElementById(`galeria-${idx}`);
+            galeria.querySelectorAll('img').forEach((img, i) => {
+                img.classList.toggle('ativa', i === novoIdx);
+            });
+            galeria.querySelectorAll('.ponto').forEach((ponto, i) => {
+                ponto.classList.toggle('ativo', i === novoIdx);
+            });
+        }
+
+        carregarDados();
+    </script>
+</body>
+</html>
