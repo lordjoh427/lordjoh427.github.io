@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel CEO - Júpiter Kleidung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --azul-petroleo: #0b5b6e;
+            --azul-escuro: #084854;
+            --branco: #ffffff;
+            --cinza-claro: #f5f5f5;
+            --cinza-medio: #e0e0e0;
+            --ouro: #d4af37;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--azul-petroleo) 0%, var(--azul-escuro) 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--azul-petroleo) 0%, var(--azul-escuro) 100%);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container.oculto {
+            display: none;
+        }
+
+        .login-box {
+            background: var(--branco);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box h1 {
+            color: var(--azul-petroleo);
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .login-box p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--azul-petroleo);
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--cinza-medio);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--ouro);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: var(--ouro);
+            color: var(--azul-petroleo);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background: var(--azul-petroleo);
+            color: var(--ouro);
+        }
+
+        .erro-login {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .painel-container {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .painel-container.ativo {
+            display: block;
+        }
+
+        .painel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--branco);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .painel-header h1 {
+            color: var(--azul-petroleo);
+            font-size: 2em;
+        }
+
+        .painel-header button {
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .painel-header button:hover {
+            background: #c82333;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(255,255,255,0.2);
+            color: var(--branco);
+            border: 2px solid var(--ouro);
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.ativo {
+            background: var(--ouro);
+            color: var(--azul-petroleo);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--branco);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab-content.ativo {
+            display: block;
+        }
+
+        .formulario-produto {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid var(--cinza-medio);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--ouro);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+            max-height: 300px;
+        }
+
+        .contador-chars {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .contador-chars.alerta {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .secao-imagens {
+            border: 2px dashed var(--ouro);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .secao-imagens h3 {
+            color: var(--azul-petroleo);
+            margin-bottom: 15px;
+        }
+
+        .input-file {
+            display: none;
+        }
+
+        .btn-upload {
+            background: var(--ouro);
+            color: var(--azul-petroleo);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .btn-upload:hover {
+            background: var(--azul-petroleo);
+            color: var(--ouro);
+        }
+
+        .galeria-upload {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .imagem-upload {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--cinza-claro);
+        }
+
+        .imagem-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .imagem-upload button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            display: none;
+        }
+
+        .imagem-upload:hover button {
+            display: block;
+        }
+
+        .botoes-acao {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn-salvar,
+        .btn-cancelar {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .btn-salvar {
+            background: var(--ouro);
+            color: var(--azul-petroleo);
+        }
+
+        .btn-salvar:hover {
+            background: var(--azul-petroleo);
+            color: var(--ouro);
+        }
+
+        .btn-cancelar {
+            background: var(--cinza-medio);
+            color: #333;
+        }
+
+        .btn-cancelar:hover {
+            background: #999;
+            color: white;
+        }
+
+        .lista-produtos {
+            display: grid;
+            gap: 15px;
+        }
+
+        .item-produto {
+            background: var(--cinza-claro);
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid var(--ouro);
+        }
+
+        .info-produto {
+            flex: 1;
+        }
+
+        .info-produto h3 {
+            color: var(--azul-petroleo);
+            margin-bottom: 5px;
+        }
+
+        .info-produto p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .acoes-produto {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-editar,
+        .btn-deletar {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-editar {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-editar:hover {
+            background: #0056b3;
+        }
+
+        .btn-deletar {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-deletar:hover {
+            background: #c82333;
+        }
+
+        .mensagens {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .mensagens.sucesso {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .mensagens.erro {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .mensagens.ativo {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .painel-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .item-produto {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .tabs {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TELA DE LOGIN -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h1>👔 JÚPITER KLEIDUNG</h1>
+            <p>Painel CEO</p>
+            <div class="erro-login" id="erroLogin"></div>
+            <form onsubmit="fazerLogin(event)">
+                <div class="form-group">
+                    <label>Email/Usuário:</label>
+                    <input type="text" id="usuario" placeholder="seu-email@exemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha:</label>
+                    <input type="password" id="senha" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-login">Entrar</button>
+            </form>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #999;">
+                <strong>Demo:</strong> email: ceo@jupiterkleidung.com | senha: jupiter123
+            </p>
+        </div>
+    </div>
+
+    <!-- PAINEL ADMINISTRATIVO -->
+    <div class="painel-container" id="painelContainer">
+        <div class="painel-header">
+            <h1>🎛️ PAINEL CEO - JÚPITER KLEIDUNG</h1>
+            <button onclick="fazerLogout()">🚪 Sair</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn ativo" onclick="abrirTab('produtos')">📦 Meus Produtos</button>
+            <button class="tab-btn" onclick="abrirTab('novo')">➕ Novo Produto</button>
+        </div>
+
+        <!-- TAB: LISTA DE PRODUTOS -->
+        <div class="tab-content ativo" id="tab-produtos">
+            <h2>Seus Produtos</h2>
+            <div id="mensagemSucesso" class="mensagens sucesso"></div>
+            <div class="lista-produtos" id="listaProdutos"></div>
+        </div>
+
+        <!-- TAB: NOVO PRODUTO -->
+        <div class="tab-content" id="tab-novo">
+            <h2>Adicionar Novo Produto</h2>
+            <div id="mensagemErro" class="mensagens erro"></div>
+            
+            <form class="formulario-produto" onsubmit="salvarProduto(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome do Produto *</label>
+                        <input type="text" id="nome" placeholder="Ex: Camiseta Old Money Premium" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria *</label>
+                        <select id="categoria" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="Old Money">Old Money</option>
+                            <option value="Esporte">Esporte</option>
+                            <option value="Casual">Casual</option>
+                            <option value="Anime">Anime</option>
+                            <option value="Moda de Rua">Moda de Rua</option>
+                            <option value="Moda Íntima">Moda Íntima</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Preço (R$) *</label>
+                        <input type="number" id="preco" placeholder="99.90" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Link Shopee</label>
+                        <input type="url" id="linkShopee" placeholder="https://shopee.com.br/...">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Link Shein</label>
+                        <input type="url" id="linkShein" placeholder="https://shein.com.br/...">
+                    </div>
+                </div>
+
+                <div class="form-group form-group-full">
+                    <label>Descrição do Produto (máx. 700 caracteres) *</label>
+                    <textarea id="descricao" placeholder="Descreva as características, materiais, indicações..." maxlength="700" required></textarea>
+                    <div class="contador-chars"><span id="contadorChars">0</span>/700</div>
+                </div>
+
+                <div class="form-group form-group-full">
+                    <div class="secao-imagens">
+                        <h3>📸 Adicionar Imagens (máx. 3)</h3>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Cole a URL da imagem abaixo:</p>
+                        
+                        <div class="form-group" style="margin-top: 15px;">
+                            <input type="url" id="linkImagem" placeholder="https://exemplo.com/imagem.jpg" onkeypress="if(event.key==='Enter') adicionarImagemURL()">
+                            <button type="button" style="margin-top: 8px; padding: 8px; background: var(--ouro); color: var(--azul-petroleo); border: none; border-radius: 6px; cursor: pointer; font-weight: bold;" onclick="adicionarImagemURL()">Adicionar URL</button>
+                        </div>
+
+                        <div class="galeria-upload" id="galeriaUpload"></div>
+                    </div>
+                </div>
+
+                <div class="botoes-acao">
+                    <button type="submit" class="btn-salvar">💾 Salvar Produto</button>
+                    <button type="button" class="btn-cancelar" onclick="limparFormulario()">🗑️ Limpar</button>
+                </div>
+            </form>
+        </div>
+    </div>
