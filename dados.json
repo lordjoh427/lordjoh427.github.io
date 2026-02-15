@@ -1,0 +1,40 @@
+{
+  "links": [
+    {
+      "nome": "📱 Instagram",
+      "url": "https://instagram.com/jupiterkleidung"
+    },
+    {
+      "nome": "💬 WhatsApp",
+      "url": "https://wa.me/55"
+    }
+  ],
+  "produtos": [
+    {
+      "id": 1,
+      "nome": "Camiseta Old Money Premium",
+      "categoria": "Old Money",
+      "preco": "89.90",
+      "descricao": "Camiseta de qualidade superior com design clássico e elegante. Feita em algodão 100% premium, perfeita para um look sofisticado e requintado. Ideal para quem aprecia a estética Old Money. Disponível em vários tamanhos.",
+      "imagens": [
+        "https://via.placeholder.com/400x400?text=Camiseta+Old+Money+1",
+        "https://via.placeholder.com/400x400?text=Camiseta+Old+Money+2"
+      ],
+      "linkShopee": "https://shopee.com.br/",
+      "linkShein": "https://shein.com.br/"
+    },
+    {
+      "id": 2,
+      "nome": "Bermuda Esporte Conforto",
+      "categoria": "Esporte",
+      "preco": "79.90",
+      "descricao": "Bermuda de lycra para esportes e academia. Material respirável e confortável. Perfeita para treinos, corridas e atividades físicas. Design moderno e elegante.",
+      "imagens": [
+        "https://via.placeholder.com/400x400?text=Bermuda+Esporte+1",
+        "https://via.placeholder.com/400x400?text=Bermuda+Esporte+2"
+      ],
+      "linkShopee": "https://shopee.com.br/",
+      "linkShein": "https://shein.com.br/"
+    }
+  ]
+}
